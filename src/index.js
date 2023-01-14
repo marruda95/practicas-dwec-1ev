@@ -1,32 +1,26 @@
+
+let unmark = document.getElementsByName('unmark')
 window.onload = () => {
     console.log('loaded')
-
     let cells = document.getElementsByClassName('cell')
     let players = document.getElementById('player')
+    let table = document.getElementById('movements')
     let newRow
     let turnRow 
     let positionRow 
     let playerRow 
     let count = 0
-    let currentPlayer = true
-    const wins = [
-        // ROWS
-        ['1-1', '1-2', '1-3']
-    ]
-    let player_o = []
-    let player_x = []
     let selectedCell
-    let table = document.getElementById('movements')
-    console.log(currentPlayer)
+
     for (const cell of cells) {
         cell.onclick = (event) => {
-            const [, x, y] = event.target.id.split('-')
-
+            const x = event.target.id
+            
             // COUNT TURNS
             count++
 
             // SAVE SELECTED CELL 
-            selectedCell = `${x}-${y}`
+            selectedCell = `${x}`
 
             // INSERT MOVEMENT ROW
             newRow = table.insertRow(0)
@@ -42,6 +36,7 @@ window.onload = () => {
                 positionRow.innerHTML = "Skipped"
             }
 
+        
             // PLAYRER O
             if (players.className === "turn-cell-o"){
                 // PLACE MARKER
@@ -53,12 +48,7 @@ window.onload = () => {
                 players.classList.add("turn-cell-x")
 
                 // SAVE MOVEMENT
-                player_o.push(selectedCell)
-                console.log(player_o)
-                playerRow.innerHTML = "O"
-
-                currentPlayer = !currentPlayer
-                console.log(currentPlayer)
+                playerRow.innerHTML = "O" 
             }
 
             // PLAYER X
@@ -72,30 +62,21 @@ window.onload = () => {
                 players.classList.remove("turn-cell-x")
                 players.classList.add("turn-cell-o")
                 
-                
-                playerRow.innerHTML = "X"    
-                currentPlayer = !currentPlayer // true
-                
-                player_x.push(selectedCell)
-                console.log(player_x)
-                console.log(currentPlayer)
+                playerRow.innerHTML = "X"  
+    
             } 
+
+            checkWin();
             
         }  
         
-        
-        
     }
-    // WIN 
-    
  
     // RESTART ENTIRE GAME
     restart.onclick = function() {restartGame()} 
     function restartGame() { 
         // REMOVE MOVEMENTS REGISTERS
         table.innerHTML = ""
-        // UNMARK CELLS 
-        let unmark = document.getElementsByName('unmark')
         unmark.forEach(cell => {
             cell.classList.remove("cell-o")
             cell.classList.remove("cell-x")
@@ -108,3 +89,42 @@ window.onload = () => {
     }
 
 }
+
+
+function checkWin(){
+    let winningCombinations = [
+        [1,2,3],
+        [4,5,6],
+        [7,8,9],
+        [1,4,7],
+        [2,5,8],
+        [3,6,9],
+        [1,5,9],
+        [3,5,7]
+    ]
+     for (i = 0; i < winningCombinations.length; i++){
+
+        let cell1 = document.getElementById(winningCombinations[i][0]).className
+        let cell2 = document.getElementById(winningCombinations[i][1]).className
+        let cell3 = document.getElementById(winningCombinations[i][2]).className
+        
+        if (cell1 === "cell-x"){
+            if (cell2 === "cell-x"){
+                if (cell3 == "cell-x"){
+                    window.alert("HA GANADO X")
+                    
+                }
+            }
+        }
+
+        if (cell1 === "cell-o"){
+            if (cell2 === "cell-o"){
+                if (cell3 == "cell-o"){
+                    window.alert("HA GANADO O")
+                    
+                }
+            }
+        }
+    }    
+}
+
